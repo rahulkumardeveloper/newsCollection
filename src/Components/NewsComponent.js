@@ -6,7 +6,8 @@ export default class NewsComponent extends Component {
     articles: [],
     isLoading: false,
     page: 1,
-    pageSize: 4
+    pageSize: 4,
+    totalPageNumber: 0
   }
   async componentDidMount() {
     let url = `https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page}&pageSize=${this.state.pageSize}`;
@@ -17,7 +18,8 @@ export default class NewsComponent extends Component {
     this.setState({
       articles: parseData.articles,
       page: 1,
-      pageSize: 4
+      pageSize: 4,
+      totalPageNumber: Math.ceil(parseData.totalResults / this.state.pageSize)
     })
   }
   onPrevClick = async () => {
@@ -52,7 +54,7 @@ export default class NewsComponent extends Component {
         </div>
         <div className="paginationBtn container">
           <button disabled={this.state.page <= 1} type="button" className='btn btn-dark prevBtn' onClick={this.onPrevClick}>&larr;Prev</button>
-          <button type="button" className='btn btn-dark nextBtn' onClick={this.onNextClick}>Next&rarr;</button>
+          <button disabled={this.state.page === this.state.totalPageNumber} type="button" className='btn btn-dark nextBtn' onClick={this.onNextClick}>Next&rarr;</button>
         </div>
       </>
     );
