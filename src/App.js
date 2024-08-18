@@ -10,7 +10,9 @@ export default class App extends Component {
     return (
       <div>
         <Navbar />
-        <h2 className='newHeader'>NewsCollection- Top Heading.</h2>
+        <div className="container">
+          <h2>NewsCollection- Top Heading.</h2>
+        </div>
         <NewsComponent />
       </div>
     );
