@@ -9,7 +9,7 @@ export default class NewsItem extends Component {
         return (
             <div>
                 <div className="card my-3" style={{ width: '18rem' }}>
-                    <img src={urlToImage} className="card-img-top" alt="..." height="200px"></img>
+                    <img src={urlToImage} className="card-img-top" alt="urlto not coming in api" height="200px"></img>
                     <div className="card-body">
                         <h5 className="card-title">{title}...</h5>
                         <p className="card-text">

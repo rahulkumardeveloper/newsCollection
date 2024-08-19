@@ -4,7 +4,7 @@ export default class Navbar extends Component {
     render() {
         return (
             <div>
-                <nav className="navbar navbar-expand-lg bg-body-tertiary">
+                <nav className="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
                     <div className="container-fluid">
                         <a className="navbar-brand" href="/">
                             <img src="newslogo.png" alt="Logo" width="30" height="24" className="d-inline-block align-text-top" />
@@ -17,9 +17,13 @@ export default class Navbar extends Component {
                                 <li className="nav-item">
                                     <a className="nav-link active" aria-current="page" href="/">Home</a>
                                 </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="/">News Details</a>
-                                </li>
+                                <li className="nav-item"><a className="nav-link" href="/">business</a></li>
+                                <li className="nav-item"><a className="nav-link" href="/">entertainment</a></li>
+                                <li className="nav-item"><a className="nav-link" href="/">general</a></li>
+                                <li className="nav-item"><a className="nav-link" href="/">health</a></li>
+                                <li className="nav-item"><a className="nav-link" href="/">science</a></li>
+                                <li className="nav-item"><a className="nav-link" href="/">sports</a></li>
+                                <li className="nav-item"><a className="nav-link" href="/">technology.</a></li>
 
                             </ul>
                             {/* <form className="d-flex" role="search">
