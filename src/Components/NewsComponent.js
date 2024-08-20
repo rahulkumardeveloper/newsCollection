@@ -12,7 +12,7 @@ export default class NewsComponent extends Component {
   }
 
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=business&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let parseData = await data.json();
     this.setState({
@@ -26,7 +26,7 @@ export default class NewsComponent extends Component {
     this.setState({
       isLoading: true
     })
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=business&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let parseData = await data.json();
     console.log("parseData", parseData)
@@ -41,7 +41,7 @@ export default class NewsComponent extends Component {
     this.setState({
       isLoading: true
     })
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category={this.props.category}&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let parseData = await data.json();
     this.setState({
@@ -53,10 +53,20 @@ export default class NewsComponent extends Component {
   render() {
     return (
       <>
+        <div className="container">
+          <div className="d-flex justify-content-between">
+            <div className="p-2"> <h3>NewsCollection- Top Heading...</h3></div>
+            <div className="p-2">
+              <form className="d-flex" role="search">
+                <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                <button className="btn btn-outline-success" type="submit">Search</button>
+              </form>
+            </div>
+          </div>
+        </div>
         {this.state.isLoading &&
           <IsLoading />
         }
-
         <div className='newsTemplate container'>
           {!this.state.isLoading && this.state.articles.map((element) => {
             return <div key={element.url}>

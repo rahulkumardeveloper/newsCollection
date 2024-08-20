@@ -12,9 +12,6 @@ export default class App extends Component {
     return (
       <div>
         <Navbar />
-        <div className="container">
-          <h2>NewsCollection- Top Heading.</h2>
-        </div>
         <NewsComponent pageSize={this.pageSize} country={'in'} category={'business'} />
       </div>
     );
