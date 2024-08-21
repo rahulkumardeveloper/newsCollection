@@ -4,40 +4,14 @@ import IsLoading
   from './IsLoading';
 
 export default class NewsComponent extends Component {
+  parseData = [];
   state = {
     articles: [],
     isLoading: true,
     page: 1,
     totalPageNumber: 0
   }
-
-  async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page}&pageSize=${this.props.pageSize}`;
-    let data = await fetch(url);
-    let parseData = await data.json();
-    this.setState({
-      articles: parseData.articles,
-      page: 1,
-      totalPageNumber: Math.ceil(parseData.totalResults / this.props.pageSize),
-      isLoading: false
-    })
-  }
-  onPrevClick = async () => {
-    this.setState({
-      isLoading: true
-    })
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`;
-    let data = await fetch(url);
-    let parseData = await data.json();
-    console.log("parseData", parseData)
-    this.setState({
-      articles: parseData.articles,
-      page: this.state.page - 1,
-      isLoading: false
-    })
-  }
-
-  onNextClick = async () => {
+  updateNews = async () => {
     this.setState({
       isLoading: true
     })
@@ -46,32 +20,73 @@ export default class NewsComponent extends Component {
     let parseData = await data.json();
     this.setState({
       articles: parseData.articles,
-      page: this.state.page + 1,
       isLoading: false
+    })
+  }
+  async componentDidMount() {
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    let data = await fetch(url);
+    this.parseData = await data.json();
+    this.setState({
+      articles: this.parseData.articles,
+      page: 1,
+      totalPageNumber: Math.ceil(this.parseData.totalResults / this.props.pageSize),
+      isLoading: false
+    })
+  }
+  onPrevClick = async () => {
+    this.setState({
+      page: this.state.page - 1,
+    })
+    this.updateNews();
+  }
+
+  onNextClick = async () => {
+    this.setState({
+      page: this.state.page + 1,
+    })
+    this.updateNews();
+  }
+  onKeyUp = (event) => {
+    let inputData = event.target.value;
+    let filterData = this.parseData.articles.filter((element) => { return element.title.toLowerCase().includes(inputData) });
+    this.setState({
+      articles: filterData,
+    })
+  }
+
+  onSearch = () => {
+    let inputData = this.refs.enterTitle.value;
+    console.log(inputData);
+    let filterData = this.parseData.articles.filter((element) => { return element.title.toLowerCase().includes(inputData) });
+    this.setState({
+      articles: filterData,
     })
   }
   render() {
     return (
       <>
+        {/* top heading section */}
         <div className="container">
           <div className="d-flex justify-content-between">
-            <div className="p-2"> <h3>NewsCollection- Top Heading...</h3></div>
+            <div className="p-2"> <h4>NewsCollection- Top Heading...</h4></div>
             <div className="p-2">
               <form className="d-flex" role="search">
-                <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                <button className="btn btn-outline-success" type="submit">Search</button>
+                <input className="form-control me-2" type="search" placeholder="Search by title" ref='enterTitle' onKeyUp={this.onKeyUp} aria-label="Search" />
+                <button className="btn btn-outline-success" type="submit" onClick={this.onSearch}>Search</button>
               </form>
             </div>
           </div>
         </div>
+        {/* spinner section */}
         {this.state.isLoading &&
           <IsLoading />
         }
         <div className='newsTemplate container'>
           {!this.state.isLoading && this.state.articles.map((element) => {
             return <div key={element.url}>
-              < NewsItem title={element.title ? element.title.slice(0, 30) : 'In Api Title Not Exit'}
-                description={element.description ? element.description.slice(0, 40) : 'In Api Description Not Exit'}
+              < NewsItem source={element.source.name} title={element.title ? element.title.slice(0, 30) : 'In Api Title Not Exit'} time={element.publishedAt} author={element.author ? element.author : 'Unknow'}
+                description={element.description ? element.description.slice(0, 50) : 'In Api Description Not Exit'}
                 urlToImage={element.urlToImage ? element.urlToImage : 'https://ih1.redbubble.net/image.1861329778.2941/st,small,845x845-pad,1000x1000,f8f8f8.jpg'} url={element.url} />
             </div>
           })

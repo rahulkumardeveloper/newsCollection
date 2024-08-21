@@ -4,7 +4,7 @@ export default class NewsItem extends Component {
 
 
     render() {
-        const { title, description, urlToImage, url } = this.props;
+        const { title, description, urlToImage, url, time, author, source } = this.props;
 
         return (
             <div>
@@ -15,10 +15,14 @@ export default class NewsItem extends Component {
                         <p className="card-text">
                             {description}...
                         </p>
+                        <p className="card-text"><small className="text-danger">by{author} at {time}</small></p>
                         <a href={url} rel="noreferrer" target='_blank' className="btn btn-dark">
                             Read more...
                         </a>
                     </div>
+                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {source}
+                    </span>
                 </div>
             </div>
         );
