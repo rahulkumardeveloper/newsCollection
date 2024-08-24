@@ -2,37 +2,47 @@ import React, { Component } from 'react';
 import NewsItem from './NewsItem';
 import IsLoading
   from './IsLoading';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export default class NewsComponent extends Component {
+
+  constructor(props) {
+    super();
+    document.title = `${props.category} - News Collection`;
+  }
   parseData = [];
   state = {
     articles: [],
     isLoading: true,
     page: 1,
-    totalPageNumber: 0
+    totalPageNumber: 0,
   }
   updateNews = async () => {
+    this.props.updateTopLoader(10);
     this.setState({
       isLoading: true
     })
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
     let data = await fetch(url);
     let parseData = await data.json();
+    this.props.updateTopLoader(50);
+
     this.setState({
       articles: parseData.articles,
       isLoading: false
     })
+    this.props.updateTopLoader(100);
+
   }
   async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page}&pageSize=${this.props.pageSize}`;
-    let data = await fetch(url);
-    this.parseData = await data.json();
-    this.setState({
-      articles: this.parseData.articles,
-      page: 1,
-      totalPageNumber: Math.ceil(this.parseData.totalResults / this.props.pageSize),
-      isLoading: false
-    })
+    this.updateNews();
+    // let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    // let data = await fetch(url);
+    // this.parseData = await data.json();
+    // this.setState({
+    //   articles: this.parseData.articles,
+    //   isLoading: false
+    // })
   }
   onPrevClick = async () => {
     this.setState({
@@ -54,47 +64,69 @@ export default class NewsComponent extends Component {
       articles: filterData,
     })
   }
-
-  onSearch = () => {
-    let inputData = this.refs.enterTitle.value;
-    console.log(inputData);
-    let filterData = this.parseData.articles.filter((element) => { return element.title.toLowerCase().includes(inputData) });
+  fetchMoreData = async () => {
     this.setState({
-      articles: filterData,
-    })
-  }
+      page: this.state.page + 1
+    });
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=7d81283e788b4211a61f8b8a25597554&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`;
+    let data = await fetch(url);
+    let parseData = await data.json();
+    setTimeout(() => {
+      this.setState({
+        articles: this.state.articles.concat(parseData.articles),
+      })
+    }, 500)
+  };
   render() {
     return (
       <>
         {/* top heading section */}
         <div className="container">
           <div className="d-flex justify-content-between">
-            <div className="p-2"> <h4>NewsCollection- Top Heading...</h4></div>
+            <div className="p-2"> <h4>NewsCollection - Top {this.props.category} Heading..  </h4></div>
             <div className="p-2">
               <form className="d-flex" role="search">
                 <input className="form-control me-2" type="search" placeholder="Search by title" ref='enterTitle' onKeyUp={this.onKeyUp} aria-label="Search" />
-                <button className="btn btn-outline-success" type="submit" onClick={this.onSearch}>Search</button>
               </form>
             </div>
           </div>
-        </div>
-        {/* spinner section */}
-        {this.state.isLoading &&
-          <IsLoading />
-        }
-        <div className='newsTemplate container'>
-          {!this.state.isLoading && this.state.articles.map((element) => {
-            return <div key={element.url}>
-              < NewsItem source={element.source.name} title={element.title ? element.title.slice(0, 30) : 'In Api Title Not Exit'} time={element.publishedAt} author={element.author ? element.author : 'Unknow'}
-                description={element.description ? element.description.slice(0, 50) : 'In Api Description Not Exit'}
-                urlToImage={element.urlToImage ? element.urlToImage : 'https://ih1.redbubble.net/image.1861329778.2941/st,small,845x845-pad,1000x1000,f8f8f8.jpg'} url={element.url} />
-            </div>
-          })
+          {this.state.isLoading &&
+            <IsLoading />
           }
-        </div>
-        <div className="paginationBtn container">
+          {/* infinite Scroll bar technique */}
+          <InfiniteScroll
+            dataLength={this.state.articles.length} //This is important field to render the next data
+            next={this.fetchMoreData}
+            hasMore={this.state.articles.length !== this.state.totalPageNumber}
+            loader={<IsLoading />}
+            style={{ overflow: "none" }}
+          >
+
+            {/* infinite Scroll bar technique */}
+            {/* spinner section */}
+            {/* {this.state.isLoading &&
+          <IsLoading />
+        } */}
+            <div className='container'>
+              <div className='row'>
+                {/* {!this.state.isLoading && */}
+                {this.state.articles.map((element) => {
+                  return <div key={element.url}>
+                    < NewsItem source={element.source.name} title={element.title ? element.title.slice(0, 30) : 'In Api Title Not Exit'} time={element.publishedAt} author={element.author ? element.author : 'Unknow'}
+                      description={element.description ? element.description.slice(0, 50) : 'In Api Description Not Exit'}
+                      urlToImage={element.urlToImage ? element.urlToImage : 'https://ih1.redbubble.net/image.1861329778.2941/st,small,845x845-pad,1000x1000,f8f8f8.jpg'} url={element.url} />
+                  </div>
+                })
+                }
+              </div>
+            </div>
+
+
+          </InfiniteScroll>
+          {/* <div className="paginationBtn container">
           <button disabled={this.state.page <= 1} type="button" className='btn btn-dark prevBtn' onClick={this.onPrevClick}>&larr;Prev</button>
           <button disabled={this.state.page === this.state.totalPageNumber} type="button" className='btn btn-dark nextBtn' onClick={this.onNextClick}>Next&rarr;</button>
+        </div> */}
         </div>
       </>
     );

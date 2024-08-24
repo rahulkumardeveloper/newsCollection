@@ -10,3 +10,10 @@
   display: flex;
   justify-content: space-between;
 }
+
+.badgeDesign {
+  display: flex;
+  justify-content: flex-end;
+  position: absolute;
+  right: 0px;
+}
