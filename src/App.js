@@ -69,7 +69,6 @@ import LoadingBar from 'react-top-loading-bar'
 
 const App = () => {
   let pageSize = 8;
-  let apiKey = process.env.apiKey;
   const [topLoaderBar, setState] = useState(3);
 
   const updateTopLoader = (loaderValue) => {
@@ -88,28 +87,28 @@ const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={
-            <NewsComponent updateTopLoader={updateTopLoader} apiKey={apiKey} pageSize={pageSize} country='in' category='general' />}
+            <NewsComponent updateTopLoader={updateTopLoader} pageSize={pageSize} country='in' category='general' />}
           />
           <Route path="/general" element={
-            <NewsComponent updateTopLoader={updateTopLoader} apiKey={apiKey} key='general' pageSize={pageSize} country='in' category='general' />
+            <NewsComponent updateTopLoader={updateTopLoader} key='general' pageSize={pageSize} country='in' category='general' />
           } />
           <Route path="/business" element={
-            <NewsComponent updateTopLoader={updateTopLoader} apiKey={apiKey} key='business' pageSize={pageSize} country='in' category='business' />
+            <NewsComponent updateTopLoader={updateTopLoader} key='business' pageSize={pageSize} country='in' category='business' />
           } />
           <Route path="/entertainment" element={
-            <NewsComponent updateTopLoader={updateTopLoader} apiKey={apiKey} key='entertainment' pageSize={pageSize} country='in' category='entertainment' />
+            <NewsComponent updateTopLoader={updateTopLoader} key='entertainment' pageSize={pageSize} country='in' category='entertainment' />
           } />
           <Route path="/health" element={
-            <NewsComponent updateTopLoader={updateTopLoader} apiKey={apiKey} key='health' pageSize={pageSize} country='in' category='health' />
+            <NewsComponent updateTopLoader={updateTopLoader} key='health' pageSize={pageSize} country='in' category='health' />
           } />
           <Route path="/science" element={
-            <NewsComponent updateTopLoader={updateTopLoader} apiKey={apiKey} key='science' pageSize={pageSize} country='in' category='science' />
+            <NewsComponent updateTopLoader={updateTopLoader} key='science' pageSize={pageSize} country='in' category='science' />
           } />
           <Route path="/sports" element={
-            <NewsComponent updateTopLoader={updateTopLoader} apiKey={apiKey} key='sports' pageSize={pageSize} country='in' category='sports' />
+            <NewsComponent updateTopLoader={updateTopLoader} key='sports' pageSize={pageSize} country='in' category='sports' />
           } />
           <Route path="/technology" element={
-            <NewsComponent updateTopLoader={updateTopLoader} apiKey={apiKey} key='technology' pageSize={pageSize} country='in' category='technology' />
+            <NewsComponent updateTopLoader={updateTopLoader} key='technology' pageSize={pageSize} country='in' category='technology' />
           } />
         </Routes>
       </BrowserRouter >

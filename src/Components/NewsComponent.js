@@ -159,6 +159,8 @@ const NewsComponent = (props) => {
     let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=7d81283e788b4211a61f8b8a25597554&page=${page}&pageSize=${props.pageSize}`;
     let data = await fetch(url);
     let parseData = await data.json();
+    console.log(parseData);
+
     props.updateTopLoader(50);
 
     setArticle({ articles: parseData.articles })
@@ -170,7 +172,8 @@ const NewsComponent = (props) => {
   }
   useEffect(() => {
     updateNews();
-  },);
+
+  });
 
   const onKeyUp = (event) => {
     let inputData = event.target.value;
